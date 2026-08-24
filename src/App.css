@@ -832,8 +832,9 @@ body{
 
 /* Responsive tweaks */
 @media (max-width: 640px) {
-  .controls { grid-template-columns: 1fr; gap:10px; }
+  .controls { grid-template-columns: 1fr; gap:12px; }
   .scoreboard { justify-content:center; }
+  .buttons { flex-wrap: wrap; justify-content: center; gap: 8px; }
   .input-grid { grid-template-columns: 1fr; }
   .mode-selector { grid-template-columns: 1fr; }
   .difficulty-buttons { grid-template-columns: 1fr; }

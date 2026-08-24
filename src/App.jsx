@@ -826,7 +826,7 @@ export default function App() {
                 aria-label="View statistics"
                 title="View statistics"
               >
-                📊 View Statistics
+                📊
               </button>
               <button 
                 onClick={() => setShowAchievements(true)} 
@@ -860,10 +860,6 @@ export default function App() {
               </div>
             )}
             <div className='controls'>
-              <div className='name-inputs' style={{ display:'flex', gap:12, alignItems:'center' }}>
-                <div><strong>{names.X}</strong></div>
-                <div><strong>{names.O}</strong></div>
-              </div>
 
               <div className='scoreboard'>
                 <div className='score-item'>
