@@ -491,14 +491,17 @@ export default function App() {
     const recentGames = gameHistory.slice(0, 10)
     
     return (
-      <div className="winner-modal" role="dialog" aria-modal="true" aria-label="Statistics">
-        <div className="stats-card" tabIndex={-1}>
-          <h3 className="stats-title">📊 Game Statistics</h3>
+      <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Statistics">
+        <div className="bottom-sheet" tabIndex={-1}>
+          <div className="sheet-header">
+            <h3 className="sheet-title">📊 Statistics</h3>
+            <button className="close-btn" onClick={onClose}>✕</button>
+          </div>
           
           <div className="stats-grid">
             <div className="stat-box">
               <div className="stat-value">{totalGames}</div>
-              <div className="stat-label">Total Games</div>
+              <div className="stat-label">Games</div>
             </div>
             <div className="stat-box">
               <div className="stat-value">{xWins}</div>
@@ -532,9 +535,8 @@ export default function App() {
             </div>
           )}
           
-          <div className="stats-actions">
-            <button className="primary-btn" onClick={onClose}>Close</button>
-            <button className="secondary-btn" onClick={() => { if(confirm('Clear all game history?')) setGameHistory([]) }}>Clear History</button>
+          <div className="stats-actions" style={{marginTop: 16}}>
+            <button className="btn btn-secondary" style={{width: '100%'}} onClick={() => { if(confirm('Clear all game history?')) setGameHistory([]) }}>Clear History</button>
           </div>
         </div>
       </div>
@@ -554,19 +556,23 @@ export default function App() {
     ]
 
     return (
-      <div className="winner-modal" role="dialog" aria-modal="true" aria-label="Achievements">
-        <div className="achievements-card" tabIndex={-1}>
-          <h3 className="achievements-title">🏅 Achievements</h3>
-          <div className="achievements-grid">
+      <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Achievements">
+        <div className="bottom-sheet" tabIndex={-1}>
+          <div className="sheet-header">
+            <h3 className="sheet-title">🏅 Achievements</h3>
+            <button className="close-btn" onClick={onClose}>✕</button>
+          </div>
+          <div className="grid-list">
             {achievementsList.map(ach => (
-              <div key={ach.id} className={`achievement-badge ${achievements[ach.id] ? 'unlocked' : 'locked'}`}>
-                <div className="badge-emoji">{ach.emoji}</div>
-                <div className="badge-title">{ach.title}</div>
-                <div className="badge-desc">{ach.desc}</div>
+              <div key={ach.id} className={`ach-item ${achievements[ach.id] ? 'unlocked' : 'locked'}`}>
+                <div className="ach-icon">{ach.emoji}</div>
+                <div className="ach-info">
+                  <h4>{ach.title}</h4>
+                  <p>{ach.desc}</p>
+                </div>
               </div>
             ))}
           </div>
-          <button className="primary-btn" onClick={onClose}>Close</button>
         </div>
       </div>
     )
@@ -579,17 +585,20 @@ export default function App() {
     const themes = ['indigo', 'purple', 'blue', 'coral', 'green']
 
     return (
-      <div className="winner-modal" role="dialog" aria-modal="true" aria-label="Settings">
-        <div className="settings-card" tabIndex={-1}>
-          <h3 className="settings-title">⚙️ Settings</h3>
+      <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Settings">
+        <div className="bottom-sheet" tabIndex={-1}>
+          <div className="sheet-header">
+            <h3 className="sheet-title">⚙️ Settings</h3>
+            <button className="close-btn" onClick={onClose}>✕</button>
+          </div>
           
           <div className="settings-section">
-            <h4 className="section-title">🎨 Theme</h4>
-            <div className="theme-selector">
+            <h4 className="section-title" style={{marginBottom: 12}}>🎨 Theme Color</h4>
+            <div className="theme-bubbles">
               {themes.map(t => (
                 <button
                   key={t}
-                  className={`theme-btn ${theme === t ? 'active' : ''}`}
+                  className={`t-bubble ${theme === t ? 'active' : ''}`}
                   onClick={() => setTheme(t)}
                   title={t.charAt(0).toUpperCase() + t.slice(1)}
                   style={{ background: `var(--theme-${t})` }}
@@ -601,19 +610,19 @@ export default function App() {
           </div>
 
           <div className="settings-section">
-            <h4 className="section-title">🔊 Sound Settings</h4>
-            <label className="sound-toggle">
+            <h4 className="section-title" style={{marginBottom: 12}}>🔊 Audio</h4>
+            <label className="sound-toggle-wrapper">
+              <span className="toggle-text">Enable Sound Effects</span>
               <input 
                 type="checkbox"
                 checked={soundEnabled}
                 onChange={(e) => setSoundEnabled(e.target.checked)}
-                className="toggle-input"
+                style={{width: 24, height: 24}}
               />
-              <span className="toggle-text">Enable Sound Effects</span>
             </label>
             
             <div className="volume-control">
-              <label>Sound Volume: {Math.round(soundVolume * 100)}%</label>
+              <label>Volume: {Math.round(soundVolume * 100)}%</label>
               <input
                 type="range"
                 min="0"
@@ -625,10 +634,6 @@ export default function App() {
                 className="volume-slider"
               />
             </div>
-          </div>
-
-          <div className="settings-actions">
-            <button className="primary-btn" onClick={onClose}>Close</button>
           </div>
         </div>
       </div>
@@ -649,16 +654,15 @@ export default function App() {
     }))
 
     return (
-      <div className="winner-modal" role="dialog" aria-modal="true" aria-label="Winner">
+      <div className="modal-overlay" role="dialog" aria-modal="true" aria-label="Winner">
         <div className="winner-card" tabIndex={-1}>
           <div className="winner-badge">🎉</div>
-          <h3 className="winner-title">Winner</h3>
-          <p className="winner-name">{playerName} <span className="winner-mark">({winner})</span></p>
-          <p className="winner-score">Score: {points}</p>
+          <h3 className="winner-title">{playerName} Wins!</h3>
+          <p className="winner-name">Score: {points}</p>
 
-          <div className="winner-actions">
-            <button className="primary-btn" onClick={() => { onClose(); handleResetBoard() }}>Play Again</button>
-            <button className="secondary-btn" onClick={() => { onClose(); }}>Close</button>
+          <div className="game-actions" style={{marginTop: 32}}>
+            <button className="btn btn-primary" style={{flex: 1}} onClick={() => { onClose(); handleResetBoard() }}>Play Again</button>
+            <button className="btn btn-secondary" style={{flex: 1}} onClick={() => { onClose(); }}>Close</button>
           </div>
 
           <div className="confetti-wrap" aria-hidden>
@@ -678,180 +682,87 @@ export default function App() {
   return (
     <>
       <div className='app-root'>
-        <h1 className='title'>Tic‑Tac‑Toe 🎮</h1>
-
         {!started ? (
-          <div className="start-modal">
-            <div className="start-card" role="dialog" aria-modal="true" aria-labelledby="start-title">
-              <div className="avatar" aria-hidden>
-                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="24" height="24" rx="6" fill="#4F46E5"/>
-                  <path d="M12 12a3 3 0 100-6 3 3 0 000 6z" fill="#fff"/>
-                  <path d="M4 19a8 8 0 0116 0" stroke="rgba(255,255,255,0.85)" strokeWidth="1.2" strokeLinecap="round"/>
-                </svg>
-              </div>
-
-              <h2 id="start-title">Welcome to Tic‑Tac‑Toe</h2>
-              <p className="muted">Choose your game mode to begin.</p>
+          <div className="modal-overlay start-menu">
+            <div className="menu-card" role="dialog" aria-modal="true" aria-labelledby="start-title">
+              <div className="game-logo" aria-hidden>🎮</div>
+              <h2 id="start-title">Tic-Tac-Toe</h2>
+              <p>A premium classic experience</p>
 
               {!gameMode ? (
                 <>
-                  <div className="mode-selector">
-                    <button 
-                      onClick={() => setGameMode('pvp')}
-                      className="mode-btn"
-                    >
-                      <span className="mode-icon">👥</span>
-                      <span className="mode-label">Player vs Player</span>
-                      <span className="mode-desc">Play with a friend</span>
-                    </button>
-                    <button 
-                      onClick={() => setGameMode('pva')}
-                      className="mode-btn"
-                    >
-                      <span className="mode-icon">🤖</span>
-                      <span className="mode-label">Player vs AI</span>
-                      <span className="mode-desc">Challenge the AI</span>
-                    </button>
-                  </div>
+                  <button onClick={() => setGameMode('pvp')} className="big-btn btn-primary">
+                    <span className="mode-icon">👥</span> Play vs Friend
+                  </button>
+                  <button onClick={() => setGameMode('pva')} className="big-btn btn-primary">
+                    <span className="mode-icon">🤖</span> Play vs AI
+                  </button>
 
-                  <div className="timed-mode-toggle">
-                    <label className="toggle-label">
+                  <div className="sound-toggle-wrapper" style={{marginTop: 24, padding: 12}}>
+                    <label className="toggle-label" style={{display: 'flex', gap: 12, alignItems: 'center', width: '100%', cursor: 'pointer'}}>
                       <input 
                         type="checkbox" 
                         checked={timedMode}
                         onChange={(e) => setTimedMode(e.target.checked)}
-                        className="toggle-input"
+                        style={{width: 20, height: 20}}
                       />
-                      <span className="toggle-text">⏱️ Enable Timed Mode</span>
+                      <span className="toggle-text" style={{fontSize: 14, fontWeight: 600}}>⏱️ Timed Mode</span>
                     </label>
-                    {timedMode && (
-                      <div className="time-selector">
-                        <label>Time per move: {timePerMove}s</label>
-                        <input 
-                          type="range"
-                          min="5"
-                          max="30"
-                          value={timePerMove}
-                          onChange={(e) => setTimePerMove(parseInt(e.target.value))}
-                          className="time-slider"
-                        />
-                      </div>
-                    )}
                   </div>
-
-                  <button onClick={handleResetScore} className="secondary-btn">Reset Score</button>
+                  {timedMode && (
+                    <div style={{marginBottom: 24, textAlign: 'left'}}>
+                      <label style={{fontSize: 12, fontWeight: 700, color: 'var(--muted)'}}>Time per move: {timePerMove}s</label>
+                      <input 
+                        type="range" min="5" max="30" value={timePerMove}
+                        onChange={(e) => setTimePerMove(parseInt(e.target.value))}
+                        className="volume-slider" style={{marginTop: 8}}
+                      />
+                    </div>
+                  )}
+                  <button onClick={handleResetScore} className="btn btn-secondary" style={{width: '100%', marginTop: 12}}>Reset Score</button>
                 </>
               ) : gameMode === 'pvp' ? (
                 <>
-                  <div className="input-grid">
-                    <label className="input-group">
-                      <span className="label-small">Player X</span>
-                      <input
-                        value={names.X}
-                        onChange={(e) => handleNameChange('X', e.target.value)}
-                        placeholder="Enter player X name"
-                        className="input"
-                      />
-                    </label>
-
-                    <label className="input-group">
-                      <span className="label-small">Player O</span>
-                      <input
-                        value={names.O}
-                        onChange={(e) => handleNameChange('O', e.target.value)}
-                        placeholder="Enter player O name"
-                        className="input"
-                      />
-                    </label>
-                  </div>
-
-                  <div className="actions">
-                    <button onClick={() => startGame('pvp')} className="primary-btn">Start Game</button>
-                    <button onClick={() => setGameMode(null)} className="secondary-btn">Back</button>
-                  </div>
+                  <input
+                    value={names.X} onChange={(e) => handleNameChange('X', e.target.value)}
+                    placeholder="Player X Name" className="input-box"
+                  />
+                  <input
+                    value={names.O} onChange={(e) => handleNameChange('O', e.target.value)}
+                    placeholder="Player O Name" className="input-box"
+                  />
+                  <button onClick={() => startGame('pvp')} className="big-btn btn-primary" style={{marginTop: 8}}>Start Game</button>
+                  <button onClick={() => setGameMode(null)} className="big-btn btn-secondary">Back</button>
                 </>
               ) : (
                 <>
-                  <div className="input-grid">
-                    <label className="input-group">
-                      <span className="label-small">Your Name</span>
-                      <input
-                        value={names.X}
-                        onChange={(e) => handleNameChange('X', e.target.value)}
-                        placeholder="Enter your name"
-                        className="input"
-                      />
-                    </label>
-                  </div>
-
-                  <div className="difficulty-selector">
-                    <p className="label-small">Choose Difficulty</p>
-                    <div className="difficulty-buttons">
+                  <input
+                    value={names.X} onChange={(e) => handleNameChange('X', e.target.value)}
+                    placeholder="Your Name" className="input-box"
+                  />
+                  <div style={{display: 'flex', gap: 8, marginBottom: 24, marginTop: 12}}>
+                    {['easy', 'medium', 'hard'].map(level => (
                       <button 
-                        className={`diff-btn ${difficulty === 'easy' ? 'active' : ''}`}
-                        onClick={() => setDifficulty('easy')}
+                        key={level}
+                        className={`btn ${difficulty === level ? 'btn-primary' : 'btn-secondary'}`}
+                        style={{flex: 1, padding: '10px 0', fontSize: 13, textTransform: 'capitalize'}}
+                        onClick={() => setDifficulty(level)}
                       >
-                        Easy
+                        {level}
                       </button>
-                      <button 
-                        className={`diff-btn ${difficulty === 'medium' ? 'active' : ''}`}
-                        onClick={() => setDifficulty('medium')}
-                      >
-                        Medium
-                      </button>
-                      <button 
-                        className={`diff-btn ${difficulty === 'hard' ? 'active' : ''}`}
-                        onClick={() => setDifficulty('hard')}
-                      >
-                        Hard
-                      </button>
-                    </div>
+                    ))}
                   </div>
-
-                  <div className="actions">
-                    <button onClick={() => startGame('pva')} className="primary-btn">Start Game</button>
-                    <button onClick={() => setGameMode(null)} className="secondary-btn">Back</button>
-                  </div>
+                  <button onClick={() => startGame('pva')} className="big-btn btn-primary">Start Game</button>
+                  <button onClick={() => setGameMode(null)} className="big-btn btn-secondary">Back</button>
                 </>
               )}
             </div>
           </div>
         ) : (
           <>
-            <div className='top-controls'>
-              <button 
-                onClick={() => setShowStats(true)} 
-                className='icon-btn'
-                aria-label="View statistics"
-                title="View statistics"
-              >
-                📊
-              </button>
-              <button 
-                onClick={() => setShowAchievements(true)} 
-                className='icon-btn'
-                aria-label="View achievements"
-                title="View achievements"
-              >
-                🏅
-              </button>
-              <button 
-                onClick={() => setShowSettings(true)} 
-                className='icon-btn'
-                aria-label="Settings"
-                title="Settings"
-              >
-                ⚙️
-              </button>
-              <button 
-                onClick={() => setDarkMode(!darkMode)} 
-                className='icon-btn'
-                aria-label="Toggle dark mode"
-                title="Toggle dark mode"
-              >
-                {darkMode ? '☀️' : '🌙'}
-              </button>
+            <div className="app-bar">
+              <h1 className="title">Tic-Tac-Toe</h1>
+              <span className="mode-badge">{gameMode === 'pva' ? `vs AI (${difficulty})` : 'vs Friend'}</span>
             </div>
 
             {timedMode && (
@@ -859,37 +770,64 @@ export default function App() {
                 ⏱️ {timeRemaining}s
               </div>
             )}
-            <div className='controls'>
 
-              <div className='scoreboard'>
-                <div className='score-item'>
-                  <strong>{names.X}</strong>
-                  <span className='score-value'>{score.X}</span>
-                </div>
-                <div className='score-item'>
-                  <strong>{names.O}</strong>
-                  <span className='score-value'>{score.O}</span>
+            <div className="game-area">
+              <div className="scoreboard-wrapper">
+                <div className="scoreboard">
+                  <div className={`score-player player-x ${xIsNext && !winner ? 'active' : ''}`}>
+                    <div className="avatar">X</div>
+                    <div className="score-info">
+                      <span className="score-name">{names.X || 'Player X'}</span>
+                      <span className="score-points">{score.X}</span>
+                    </div>
+                  </div>
+                  <div className="score-divider">:</div>
+                  <div className={`score-player player-o ${!xIsNext && !winner ? 'active' : ''}`}>
+                    <div className="score-info" style={{alignItems: 'flex-end'}}>
+                      <span className="score-name">{names.O || 'Player O'}</span>
+                      <span className="score-points">{score.O}</span>
+                    </div>
+                    <div className="avatar">O</div>
+                  </div>
                 </div>
               </div>
 
-              <div className='buttons'>
-                <button onClick={handleUndo} disabled={!canUndo || aiThinking} className='btn' title="Undo move">↶ Undo</button>
-                <button onClick={handleRedo} disabled={!canRedo || aiThinking} className='btn' title="Redo move">↷ Redo</button>
-                <button onClick={handleResetBoard} className='btn'>Reset Board</button>
-                <button onClick={editNames} className='btn outline'>Edit Names</button>
+              <Board squares={squares} onClick={handleClick} lastMove={lastMove} winningLine={winningLine} />
+
+              <div className="status-text">
+                {winner ? `🎉 Winner: ${names[winner]} (${winner})` : aiThinking ? '🤖 AI is thinking...' : `Your turn, ${xIsNext ? names.X : names.O}`}
+              </div>
+
+              <div className="game-actions">
+                <button onClick={handleUndo} disabled={!canUndo || aiThinking} className="btn">↶ Undo</button>
+                <button onClick={handleRedo} disabled={!canRedo || aiThinking} className="btn">↷ Redo</button>
+                <button onClick={handleResetBoard} className="btn">Reset</button>
               </div>
             </div>
 
-            <Board
-              squares={squares}
-              onClick={handleClick}
-              lastMove={lastMove}
-              winningLine={winningLine}
-            />
-
-            <p className='status'>
-              {winner ? `🎉 Winner: ${names[winner]} (${winner})` : aiThinking ? '🤖 AI is thinking...' : `Next: ${xIsNext ? names.X : names.O}`}
-            </p>
+            {/* Bottom Navigation */}
+            <div className="bottom-nav">
+              <button className="nav-item" onClick={() => setShowStats(true)}>
+                <span className="nav-icon">📊</span>
+                <span>Stats</span>
+              </button>
+              <button className="nav-item" onClick={() => setShowAchievements(true)}>
+                <span className="nav-icon">🏅</span>
+                <span>Badges</span>
+              </button>
+              <button className="nav-item main-action" onClick={editNames}>
+                <span className="nav-icon">✏️</span>
+                <span>Edit</span>
+              </button>
+              <button className="nav-item" onClick={() => setShowSettings(true)}>
+                <span className="nav-icon">⚙️</span>
+                <span>Settings</span>
+              </button>
+              <button className="nav-item" onClick={() => setDarkMode(!darkMode)}>
+                <span className="nav-icon">{darkMode ? '☀️' : '🌙'}</span>
+                <span>Theme</span>
+              </button>
+            </div>
           </>
         )}
       </div>

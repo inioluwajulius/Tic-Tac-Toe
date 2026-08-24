@@ -13,6 +13,8 @@ export default function Board({ squares = [], onClick, lastMove, winningLine }) 
         const classes = [
           'cell',
           value ? 'played' : '',
+          value === 'X' ? 'x' : '',
+          value === 'O' ? 'o' : '',
           isLast ? 'last' : '',
           isWinnerCell ? 'winner' : ''
         ].join(' ').trim()
